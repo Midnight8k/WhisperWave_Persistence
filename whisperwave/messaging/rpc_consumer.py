@@ -1,7 +1,9 @@
-from whisperwave.usecases.define_actions import DefineActions
 import pika
 import ast
 import json
+import tomllib
+
+from whisperwave.usecases.define_actions import DefineActions
 
 
 def rpc_callback(body) -> str:
@@ -14,7 +16,10 @@ def rpc_callback(body) -> str:
 
 class RpcConsumer:
     def __init__(self) -> None:
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='192.168.1.94'))
+        with open("config.toml", "rb") as f:
+            config = tomllib.load(f)
+
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=str(config["rabbit"]["host"])))
         self.channel = self.connection.channel()
 
     def on_request(self, ch, method, props, body):

@@ -1,0 +1,5 @@
+[database]
+engine = "sqlite:///data.db"
+
+[rabbit]
+host = "192.168.1.94"
